@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Box : MonoBehaviour
+public class Box
 {
     public static int instanceCount = 0;
     public int id;
@@ -22,5 +22,6 @@ public class Box : MonoBehaviour
     public void MoveToNextPosition()
     {
         position++;
+        Debug.Log("[ID:" + id + "] Position : " + position);
     }
 }

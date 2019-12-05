@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Boxes")]
     public float boxSpawnChance;
-    private List<Box> conveyorBelt;
+    public List<Box> conveyorBelt;
 
     private void Start()
     {
@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
         while(loopActive)
         {
             SpawnBox();
+            MoveAllBoxes();
             Debug.Log("New Tick : " + Time.time);
             yield return new WaitForSeconds(tickSpeed);
         }
@@ -40,6 +41,16 @@ public class GameManager : MonoBehaviour
         if(Random.Range(0f,1f) < boxSpawnChance)
         {
             Box nextBoxSpawned = new Box();
+            conveyorBelt.Add(nextBoxSpawned);
+            Debug.Log("Box has spawned");
+        }
+    }
+
+    void MoveAllBoxes()
+    {
+        foreach(Box b in conveyorBelt)
+        {
+            b.MoveToNextPosition();
         }
     }
 }
