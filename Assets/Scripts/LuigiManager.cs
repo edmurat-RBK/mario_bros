@@ -12,18 +12,38 @@ namespace EDM_Luigi
 
         void Start()
         {
-            Invoke("ChangeState", 1f);
+            state = LuigiState.AT_FLOOR_1_ARMS_DOWN;
         }
 
         void Update()
         {
-            
-        }
+            switch(state)
+            {
+                case LuigiState.AT_FLOOR_1_ARMS_DOWN:
+                    if(Input.GetKeyDown(KeyCode.Z))
+                    {
+                        state = LuigiState.AT_FLOOR_2_ARMS_DOWN;
+                    }
+                    break;
 
-        void ChangeState()
-        {
-            state = (LuigiState)Random.Range(0, 9);
-            Invoke("ChangeState", 1f);
+                case LuigiState.AT_FLOOR_2_ARMS_DOWN:
+                    if (Input.GetKeyDown(KeyCode.Z))
+                    {
+                        state = LuigiState.AT_FLOOR_3;
+                    }
+                    else if (Input.GetKeyDown(KeyCode.S))
+                    {
+                        state = LuigiState.AT_FLOOR_1_ARMS_DOWN;
+                    }
+                    break;
+
+                case LuigiState.AT_FLOOR_3:
+                    if (Input.GetKeyDown(KeyCode.S))
+                    {
+                        state = LuigiState.AT_FLOOR_2_ARMS_DOWN;
+                    }
+                    break;
+            }
         }
     }
 }
