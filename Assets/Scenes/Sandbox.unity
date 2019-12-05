@@ -165,6 +165,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tickSpeed: 1.5
   loopActive: 1
+  boxSpawnChance: 0.1
 --- !u!1001 &17291904
 PrefabInstance:
   m_ObjectHideFlags: 0
