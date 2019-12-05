@@ -15,11 +15,13 @@ public class GameManager : MonoBehaviour
 
     [Header("Boxes")]
     public float boxSpawnChance;
+    private List<Box> conveyorBelt;
 
     private void Start()
     {
         luigiManager = GameObject.FindGameObjectWithTag("LuigiManager").GetComponent<LuigiManager>();
         marioManager = GameObject.FindGameObjectWithTag("MarioManager").GetComponent<MarioManager>();
+        conveyorBelt = new List<Box>();
         StartCoroutine(Tick());
     }
 
@@ -27,9 +29,17 @@ public class GameManager : MonoBehaviour
     {
         while(loopActive)
         {
-            // What I need to do in the loop ?
+            SpawnBox();
             Debug.Log("New Tick : " + Time.time);
             yield return new WaitForSeconds(tickSpeed);
+        }
+    }
+
+    void SpawnBox()
+    {
+        if(Random.Range(0f,1f) < boxSpawnChance)
+        {
+            Box nextBoxSpawned = new Box();
         }
     }
 }
