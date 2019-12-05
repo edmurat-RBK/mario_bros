@@ -12,12 +12,18 @@ namespace EDM_Luigi
 
         void Start()
         {
-
+            Invoke("ChangeState", 1f);
         }
 
         void Update()
         {
+            
+        }
 
+        void ChangeState()
+        {
+            state = (LuigiState)Random.Range(0, 9);
+            Invoke("ChangeState", 1f);
         }
     }
 }
