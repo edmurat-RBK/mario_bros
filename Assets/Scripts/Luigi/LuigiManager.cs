@@ -45,5 +45,37 @@ namespace EDM_Luigi
                     break;
             }
         }
+
+        public void UpdateState()
+        {
+            if(state == LuigiState.AT_FLOOR_1_ARMS_DOWN)
+            {
+                state = LuigiState.AT_FLOOR_1_ARMS_UP;
+            }
+            else if (state == LuigiState.AT_FLOOR_2_ARMS_DOWN)
+            {
+                state = LuigiState.AT_FLOOR_2_ARMS_UP;
+            }
+            else if (state == LuigiState.AT_FLOOR_3)
+            {
+                state = LuigiState.DROPPING;
+            }
+        }
+
+        public void ResetState()
+        {
+            if (state == LuigiState.AT_FLOOR_1_ARMS_UP)
+            {
+                state = LuigiState.AT_FLOOR_1_ARMS_DOWN;
+            }
+            else if (state == LuigiState.AT_FLOOR_2_ARMS_UP)
+            {
+                state = LuigiState.AT_FLOOR_2_ARMS_DOWN;
+            }
+            else if (state == LuigiState.DROPPING)
+            {
+                state = LuigiState.AT_FLOOR_3;
+            }
+        }
     }
 }

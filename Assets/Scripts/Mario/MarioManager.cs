@@ -45,5 +45,37 @@ namespace EDM_Mario
                     break;
             }
         }
+
+        public void UpdateState()
+        {
+            if (state == MarioState.RECEIVING)
+            {
+                state = MarioState.AT_FLOOR_1;
+            }
+            else if (state == MarioState.AT_FLOOR_2_ARMS_DOWN)
+            {
+                state = MarioState.AT_FLOOR_2_ARMS_UP;
+            }
+            else if (state == MarioState.AT_FLOOR_3_ARMS_DOWN)
+            {
+                state = MarioState.AT_FLOOR_3_ARMS_UP;
+            }
+        }
+
+        public void ResetState()
+        {
+            if (state == MarioState.AT_FLOOR_1)
+            {
+                state = MarioState.RECEIVING;
+            }
+            else if (state == MarioState.AT_FLOOR_2_ARMS_UP)
+            {
+                state = MarioState.AT_FLOOR_2_ARMS_DOWN;
+            }
+            else if (state == MarioState.AT_FLOOR_3_ARMS_UP)
+            {
+                state = MarioState.AT_FLOOR_3_ARMS_DOWN;
+            }
+        }
     }
 }

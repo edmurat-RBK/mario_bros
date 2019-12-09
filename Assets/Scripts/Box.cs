@@ -21,7 +21,29 @@ public class Box
 
     public void MoveToNextPosition()
     {
+        // Move to next position
         position++;
-        Debug.Log("[ID:" + id + "] Position : " + position);
+
+        // Reset tilting state
+        tilt = false;
+    }
+
+    public void Tilt()
+    {
+        // Call this function with "tilt" at false, set it to true
+        // Call this function with "tilt" at true, makes the box falling
+        if(tilt)
+        {
+            Fall();
+        }
+        else
+        {
+            tilt = true;
+        }
+    }
+
+    public void Fall()
+    {
+        Debug.Log("Oups !");
     }
 }
