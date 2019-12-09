@@ -66,6 +66,7 @@ public class GameManager : MonoBehaviour
                 case 0:
                     luigiManager.ResetState();
                     marioManager.ResetState();
+                    KillBox();
 
                     MoveOddConvoyer();
                     SpawnBox();
@@ -74,11 +75,13 @@ public class GameManager : MonoBehaviour
                 case 1:
                     luigiManager.ResetState();
                     marioManager.ResetState();
+                    KillBox();
                     break;
 
                 case 2:
                     luigiManager.ResetState();
                     marioManager.ResetState();
+                    KillBox();
 
                     MoveEvenConvoyer();
                     break;
@@ -86,6 +89,7 @@ public class GameManager : MonoBehaviour
                 case 3:
                     luigiManager.ResetState();
                     marioManager.ResetState();
+                    KillBox();
                     break;
             }
             yield return new WaitForSeconds(gameLoopSpeed / 4);
@@ -95,6 +99,8 @@ public class GameManager : MonoBehaviour
     public void Tick()
     {
         tickCount++;
+
+        // Each tick, reset box that has fallen
     }
 
     public void MoveEvenConvoyer()
@@ -127,6 +133,17 @@ public class GameManager : MonoBehaviour
             // Create new Box and add it to Box list
             Box nextBoxSpawned = new Box();
             conveyorBelt.Add(nextBoxSpawned);
+        }
+    }
+
+    void KillBox()
+    {
+        for(int i=0; i<conveyorBelt.Count; i++)
+        {
+            if(conveyorBelt[i].fall)
+            {
+                conveyorBelt.Remove(conveyorBelt[i]);
+            }
         }
     }
 

@@ -9,9 +9,7 @@ public class Box
     public int position;
 
     public bool tilt = false;
-    public bool fallLeft = false;
-    public bool fallRight = false;
-    public bool fallReceiving = false;
+    public bool fall = false;
 
     public Box()
     {
@@ -44,6 +42,23 @@ public class Box
 
     public void Fall()
     {
-        Debug.Log("Oups !");
+        if(position == 2)
+        {
+            fall = true;
+            tilt = false;
+            position = -1;
+        }
+        else if (position == 11 || position == 29 || position == 47)
+        {
+            fall = true;
+            tilt = false;
+            position = -3;
+        }
+        else if (position == 20 || position == 38)
+        {
+            fall = true;
+            tilt = false;
+            position = -2;
+        }
     }
 }

@@ -8,9 +8,8 @@ public class BoxSpriteManager : MonoBehaviour
     private SpriteRenderer spriteComponant;
     private GameManager gameManager;
 
-    [Range(0,57)]
+    [Range(-3,57)]
     public int position;
-
 
     private void Start()
     {
