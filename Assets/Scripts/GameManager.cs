@@ -10,7 +10,8 @@ public class GameManager : MonoBehaviour
     private MarioManager marioManager;
 
     [Header("Game loop")]
-    public float tickSpeed;
+    public float gameLoopSpeed;
+    public int tickCount;
     public bool loopActive = true;
 
     [Header("Boxes")]
@@ -31,26 +32,90 @@ public class GameManager : MonoBehaviour
         conveyorBelt = new List<Box>();
 
         // Start game loop
-        StartCoroutine(Tick());
+        tickCount = 0;
+        StartCoroutine(GameLoop());
     }
 
+    //GAME LOOP TICK = 4 TICKS
+    /* 
+     * 0 : 
+     *      Even convoyer moves
+     *      Reset states
+     *      Update states
+     *      Spawn Box
+     * 1 : 
+     *      Reset states
+     *      Update states
+     * 2 : 
+     *      Odd convoyer moves
+     *      Reset states
+     *      Update states
+     * 3 : 
+     *      Reset states
+     *      Update states
+    */
+
     // Game loop function
-    IEnumerator Tick()
+    IEnumerator GameLoop()
     {
-        while(loopActive)
+        while (loopActive)
         {
-        // EACH TICK...
-            // Check to randomly spawn box
-            SpawnBox();
+            Tick();
+            switch(tickCount%4) 
+            {
+                case 0:
+                    luigiManager.ResetState();
+                    marioManager.ResetState();
 
-            //Reset all "unstable" state
-            luigiManager.ResetState();
-            marioManager.ResetState();
+                    MoveOddConvoyer();
+                    SpawnBox();
+                    break;
 
-            // Move boxes to next position
-            MoveAllBoxes();
-            
-            yield return new WaitForSeconds(tickSpeed);
+                case 1:
+                    luigiManager.ResetState();
+                    marioManager.ResetState();
+                    break;
+
+                case 2:
+                    luigiManager.ResetState();
+                    marioManager.ResetState();
+
+                    MoveEvenConvoyer();
+                    break;
+
+                case 3:
+                    luigiManager.ResetState();
+                    marioManager.ResetState();
+                    break;
+            }
+            yield return new WaitForSeconds(gameLoopSpeed / 4);
+        }
+    }
+
+    public void Tick()
+    {
+        tickCount++;
+    }
+
+    public void MoveEvenConvoyer()
+    {
+        foreach (Box b in conveyorBelt)
+        {
+            if ((12 <= b.position && b.position <= 20) || (30 <= b.position && b.position <= 38))
+            {
+                MoveBox(b);
+            }
+        }
+    }
+
+    public void MoveOddConvoyer()
+    {
+        foreach (Box b in conveyorBelt)
+        {
+            if ((0 <= b.position && b.position <= 11) || (21 <= b.position && b.position <= 29) || (39 <= b.position && b.position <= 47))
+            {
+                MoveBox(b);
+            }
         }
     }
 
@@ -65,113 +130,109 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void MoveAllBoxes()
+    void MoveBox(Box box)
     {
-        foreach(Box b in conveyorBelt)
+        // IF BOX IN TILT POSITION (Luigi-side)
+        if(luigiTiltPosition.Contains(box.position))
         {
-        // FOR EACH BOX IN CONVEYOR BELT LIST...
-            // IF BOX IN TILT POSITION (Luigi-side)
-            if(luigiTiltPosition.Contains(b.position))
+            // Check 3 tilting position
+            /*
+                * If Luigi is on the right state (next to a tilting box)
+                *      Move box to next position
+                * Else (if Luigi is not next to the tilting box)
+                *      Set box in a "confirmed" tilting state
+            */
+            #region Check Luigi position
+            if(box.position == luigiTiltPosition[0])
             {
-                // Check 3 tilting position
-                /*
-                 * If Luigi is on the right state (next to a tilting box)
-                 *      Move box to next position
-                 * Else (if Luigi is not next to the tilting box)
-                 *      Set box in a "confirmed" tilting state
-                */
-                #region Check Luigi position
-                if(b.position == luigiTiltPosition[0])
+                if(luigiManager.state == LuigiState.AT_FLOOR_1_ARMS_DOWN)
                 {
-                    if(luigiManager.state == LuigiState.AT_FLOOR_1_ARMS_DOWN)
-                    {
-                        b.MoveToNextPosition();
-                        luigiManager.UpdateState();
-                    }
-                    else
-                    {
-                        b.Tilt();
-                    }
+                    box.MoveToNextPosition();
+                    luigiManager.UpdateState();
                 }
-                else if (b.position == luigiTiltPosition[1])
+                else
                 {
-                    if (luigiManager.state == LuigiState.AT_FLOOR_2_ARMS_DOWN)
-                    {
-                        b.MoveToNextPosition();
-                        luigiManager.UpdateState();
-                    }
-                    else
-                    {
-                        b.Tilt();
-                    }
+                    box.Tilt();
                 }
-                else if (b.position == luigiTiltPosition[2])
-                {
-                    if (luigiManager.state == LuigiState.AT_FLOOR_3)
-                    {
-                        b.MoveToNextPosition();
-                        luigiManager.UpdateState();
-                    }
-                    else
-                    {
-                        b.Tilt();
-                    }
-                }
-                #endregion
             }
-            else if (marioTiltPosition.Contains(b.position))
+            else if (box.position == luigiTiltPosition[1])
             {
-                // Check 3 tilting position (same thing as Luigi but for Mario side)
-                /*
-                 * If Mario is on the right state (next to a tilting box)
-                 *      Move box to next position
-                 * Else (if Mario is not next to the tilting box)
-                 *      Set box in a "confirmed" tilting state
-                */
-                #region Check Mario position
-                if (b.position == marioTiltPosition[0])
+                if (luigiManager.state == LuigiState.AT_FLOOR_2_ARMS_DOWN)
                 {
-                    if (marioManager.state == MarioState.RECEIVING)
-                    {
-                        b.MoveToNextPosition();
-                        marioManager.UpdateState();
-                    }
-                    else
-                    {
-                        b.Tilt();
-                    }
+                    box.MoveToNextPosition();
+                    luigiManager.UpdateState();
                 }
-                else if (b.position == marioTiltPosition[1])
+                else
                 {
-                    if (marioManager.state == MarioState.AT_FLOOR_2_ARMS_DOWN)
-                    {
-                        b.MoveToNextPosition();
-                        marioManager.UpdateState();
-                    }
-                    else
-                    {
-                        b.Tilt();
-                    }
+                    box.Tilt();
                 }
-                else if (b.position == marioTiltPosition[2])
-                {
-                    if (marioManager.state == MarioState.AT_FLOOR_3_ARMS_DOWN)
-                    {
-                        b.MoveToNextPosition();
-                        marioManager.UpdateState();
-                    }
-                    else
-                    {
-                        b.Tilt();
-                    }
-                }
-                #endregion
             }
-            else
+            else if (box.position == luigiTiltPosition[2])
             {
-                // ALL OTHER STATES
-                b.MoveToNextPosition();
+                if (luigiManager.state == LuigiState.AT_FLOOR_3)
+                {
+                    box.MoveToNextPosition();
+                    luigiManager.UpdateState();
+                }
+                else
+                {
+                    box.Tilt();
+                }
             }
+            #endregion
+        }
+        else if (marioTiltPosition.Contains(box.position))
+        {
+            // Check 3 tilting position (same thing as Luigi but for Mario side)
+            /*
+                * If Mario is on the right state (next to a tilting box)
+                *      Move box to next position
+                * Else (if Mario is not next to the tilting box)
+                *      Set box in a "confirmed" tilting state
+            */
+            #region Check Mario position
+            if (box.position == marioTiltPosition[0])
+            {
+                if (marioManager.state == MarioState.RECEIVING)
+                {
+                    box.MoveToNextPosition();
+                    marioManager.UpdateState();
+                }
+                else
+                {
+                    box.Tilt();
+                }
+            }
+            else if (box.position == marioTiltPosition[1])
+            {
+                if (marioManager.state == MarioState.AT_FLOOR_2_ARMS_DOWN)
+                {
+                    box.MoveToNextPosition();
+                    marioManager.UpdateState();
+                }
+                else
+                {
+                    box.Tilt();
+                }
+            }
+            else if (box.position == marioTiltPosition[2])
+            {
+                if (marioManager.state == MarioState.AT_FLOOR_3_ARMS_DOWN)
+                {
+                    box.MoveToNextPosition();
+                    marioManager.UpdateState();
+                }
+                else
+                {
+                    box.Tilt();
+                }
+            }
+            #endregion
+        }
+        else
+        {
+            // ALL OTHER STATES
+            box.MoveToNextPosition();
         }
     }
 }
