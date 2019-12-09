@@ -22,11 +22,22 @@ public class GameManager : MonoBehaviour
     public List<int> luigiTiltPosition;
     public List<int> marioTiltPosition;
 
+    [Header("Scores")]
+    public int score = 0;
+    public int miss = 0;
+
+    private SevenDigitDisplay digitDisplay1;
+    private SevenDigitDisplay digitDisplay10;
+
     private void Start()
     {
         // Get Manager
         luigiManager = GameObject.FindGameObjectWithTag("LuigiManager").GetComponent<LuigiManager>();
         marioManager = GameObject.FindGameObjectWithTag("MarioManager").GetComponent<MarioManager>();
+
+        // Get digit displays
+        digitDisplay1 = GameObject.FindGameObjectWithTag("DigitDisplay1").GetComponent<SevenDigitDisplay>();
+        digitDisplay10 = GameObject.FindGameObjectWithTag("DigitDisplay10").GetComponent<SevenDigitDisplay>();
 
         // Initialise convoyor belt as a list of "Box"
         conveyorBelt = new List<Box>();
@@ -34,6 +45,22 @@ public class GameManager : MonoBehaviour
         // Start game loop
         tickCount = 0;
         StartCoroutine(GameLoop());
+    }
+
+    private void Update()
+    {
+        // Send correct digit to 7-digit displays
+        if(score <= 99)
+        {
+            digitDisplay10.digitToPrint = (int)Mathf.Floor(score / 10);
+            digitDisplay1.digitToPrint = score % 10;
+        }
+        else
+        {
+            digitDisplay10.digitToPrint = 9;
+            digitDisplay1.digitToPrint = 9;
+        }
+        
     }
 
     //GAME LOOP TICK = 4 TICKS
@@ -166,6 +193,7 @@ public class GameManager : MonoBehaviour
                 {
                     box.MoveToNextPosition();
                     luigiManager.UpdateState();
+                    score++;
                 }
                 else
                 {
@@ -178,6 +206,7 @@ public class GameManager : MonoBehaviour
                 {
                     box.MoveToNextPosition();
                     luigiManager.UpdateState();
+                    score++;
                 }
                 else
                 {
@@ -190,6 +219,7 @@ public class GameManager : MonoBehaviour
                 {
                     box.MoveToNextPosition();
                     luigiManager.UpdateState();
+                    score++;
                 }
                 else
                 {
@@ -214,6 +244,7 @@ public class GameManager : MonoBehaviour
                 {
                     box.MoveToNextPosition();
                     marioManager.UpdateState();
+                    score++;
                 }
                 else
                 {
@@ -226,6 +257,7 @@ public class GameManager : MonoBehaviour
                 {
                     box.MoveToNextPosition();
                     marioManager.UpdateState();
+                    score++;
                 }
                 else
                 {
@@ -238,6 +270,7 @@ public class GameManager : MonoBehaviour
                 {
                     box.MoveToNextPosition();
                     marioManager.UpdateState();
+                    score++;
                 }
                 else
                 {
