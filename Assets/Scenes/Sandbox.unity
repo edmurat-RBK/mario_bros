@@ -169,6 +169,8 @@ MonoBehaviour:
   boxSpawnChance: 0.3
   luigiTiltPosition: 0b0000001d0000002f000000
   marioTiltPosition: 020000001400000026000000
+  score: 0
+  miss: 0
 --- !u!1001 &17291904
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4506,7 +4508,7 @@ GameObject:
   - component: {fileID: 1106649238}
   m_Layer: 0
   m_Name: Digit-Sprite (1x)
-  m_TagString: Untagged
+  m_TagString: DigitDisplay10
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9076,7 +9078,7 @@ GameObject:
   - component: {fileID: 6990461077478436353}
   m_Layer: 0
   m_Name: Digit-Sprite (x1)
-  m_TagString: Untagged
+  m_TagString: DigitDisplay1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
