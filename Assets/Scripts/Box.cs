@@ -11,6 +11,8 @@ public class Box
     public bool tilt = false;
     public bool fall = false;
 
+
+
     public Box()
     {
         id = ++instanceCount;
@@ -26,18 +28,24 @@ public class Box
         tilt = false;
     }
 
-    public void Tilt()
+    public bool Tilt()
     {
         // Call this function with "tilt" at false, set it to true
         // Call this function with "tilt" at true, makes the box falling
+        // Return true if box has fallen, false if box has tilted
+
+        bool hasFall;
         if(tilt)
         {
             Fall();
+            hasFall = true;
         }
         else
         {
             tilt = true;
+            hasFall = false;
         }
+        return hasFall;
     }
 
     public void Fall()

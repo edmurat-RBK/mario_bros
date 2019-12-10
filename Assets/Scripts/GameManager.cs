@@ -197,7 +197,7 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    box.Tilt();
+                    if(box.Tilt()) { miss++; }
                 }
             }
             else if (box.position == luigiTiltPosition[1])
@@ -210,7 +210,7 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    box.Tilt();
+                    if (box.Tilt()) { miss++; }
                 }
             }
             else if (box.position == luigiTiltPosition[2])
@@ -223,7 +223,7 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    box.Tilt();
+                    if (box.Tilt()) { miss++; }
                 }
             }
             #endregion
@@ -248,7 +248,7 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    box.Tilt();
+                    if (box.Tilt()) { miss++; }
                 }
             }
             else if (box.position == marioTiltPosition[1])
@@ -261,7 +261,7 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    box.Tilt();
+                    if (box.Tilt()) { miss++; }
                 }
             }
             else if (box.position == marioTiltPosition[2])
@@ -274,7 +274,7 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    box.Tilt();
+                    if (box.Tilt()) { miss++; }
                 }
             }
             #endregion
