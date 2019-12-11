@@ -9,6 +9,7 @@ TagManager:
   - GameManager
   - DigitDisplay1
   - DigitDisplay10
+  - DigitDisplay100
   layers:
   - Default
   - TransparentFX
