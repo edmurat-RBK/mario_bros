@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     public int score = 0;
     public int miss = 0;
 
+    // 7-segment digit displays
     private SevenDigitDisplay digitDisplay1;
     private SevenDigitDisplay digitDisplay10;
     private SevenDigitDisplay digitDisplay100;
@@ -82,28 +83,28 @@ public class GameManager : MonoBehaviour
         
     }
 
-    //GAME LOOP TICK = 4 TICKS
-    /* 
-     * 0 : 
-     *      Even convoyer moves
-     *      Reset states
-     *      Update states
-     *      Spawn Box
-     * 1 : 
-     *      Reset states
-     *      Update states
-     * 2 : 
-     *      Odd convoyer moves
-     *      Reset states
-     *      Update states
-     * 3 : 
-     *      Reset states
-     *      Update states
-    */
-
     // Game loop function
     IEnumerator GameLoop()
     {
+    //GAME LOOP TICK = 4 TICKS
+    /* 
+        * 0 : 
+        *      Even convoyer moves
+        *      Reset states
+        *      Update states
+        * 1 : 
+        *      Reset states
+        *      Update states
+        * 2 : 
+        *      Odd convoyer moves
+        *      Reset states
+        *      Update states
+        * 3 : 
+        *      Reset states
+        *      Update states
+        * 
+        * Every 4 game loop (16 ticks), spawn box
+    */
         while (loopActive)
         {
             Tick();
