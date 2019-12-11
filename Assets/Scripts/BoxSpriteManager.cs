@@ -15,7 +15,7 @@ public class BoxSpriteManager : MonoBehaviour
     {
         spriteComponant = GetComponent<SpriteRenderer>();
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-        spriteComponant.enabled = false;
+        spriteComponant.enabled = true;
     }
 
     private void Update()

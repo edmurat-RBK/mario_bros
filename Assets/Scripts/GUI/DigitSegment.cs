@@ -22,7 +22,8 @@ public class DigitSegment : MonoBehaviour
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        active = true;
+        spriteRenderer.enabled = true;
+        active = false;
     }
 
     private void Update()

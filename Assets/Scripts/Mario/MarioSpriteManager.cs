@@ -17,7 +17,7 @@ namespace EDM_Mario
         {
             spriteComponant = GetComponent<SpriteRenderer>();
             marioManager = GameObject.FindGameObjectWithTag("MarioManager").GetComponent<MarioManager>();
-            spriteComponant.enabled = false;
+            spriteComponant.enabled = true;
         }
 
         private void Update()

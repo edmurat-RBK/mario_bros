@@ -17,7 +17,7 @@ namespace EDM_Luigi
         {
             spriteComponant = GetComponent<SpriteRenderer>();
             luigiManager = GameObject.FindGameObjectWithTag("LuigiManager").GetComponent<LuigiManager>();
-            spriteComponant.enabled = false;
+            spriteComponant.enabled = true;
         }
 
         private void Update()

@@ -13,6 +13,7 @@ public class MissDisplay : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        spriteRenderer.enabled = true;
     }
 
     private void Update()

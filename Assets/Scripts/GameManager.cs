@@ -25,6 +25,10 @@ public class GameManager : MonoBehaviour
     [Header("Scores")]
     public int score = 0;
     public int miss = 0;
+    public bool chanceTime = false;
+
+    [Header("Truck")]
+    public int boxLoaded = 0;
 
     // 7-segment digit displays
     private SevenDigitDisplay digitDisplay1;
@@ -80,7 +84,22 @@ public class GameManager : MonoBehaviour
             digitDisplay10.digitToPrint = 9;
             digitDisplay1.digitToPrint = 9;
         }
-        
+
+        // Trigger "300-point events"
+        if(score == 300)
+        {
+            if(miss == 0)
+            {
+                chanceTime = true;
+            }
+            else
+            {
+                miss = 0;
+            }
+        }
+
+        // Trigger Truck event
+
     }
 
     // Game loop function
@@ -168,16 +187,12 @@ public class GameManager : MonoBehaviour
                     marioManager.state = MarioState.GETTING_YELLED;
                     break;
 
-                case 1:
-                    // Nothing
-                    break;
-
                 case 2:
                     luigiManager.state = LuigiState.GETTING_YELLED_BOWING;
                     marioManager.state = MarioState.GETTING_YELLED_BOWING;
                     break;
 
-                case 3:
+                default:
                     // Nothing
                     break;
             }
@@ -251,7 +266,7 @@ public class GameManager : MonoBehaviour
                 * Else (if Luigi is not next to the tilting box)
                 *      Set box in a "confirmed" tilting state
             */
-            #region Check Luigi position
+            #region Luigi
             if(box.position == luigiTiltPosition[0])
             {
                 if(luigiManager.state == LuigiState.AT_FLOOR_1_ARMS_DOWN)
@@ -259,10 +274,15 @@ public class GameManager : MonoBehaviour
                     box.MoveToNextPosition();
                     luigiManager.UpdateState();
                     score++;
+                    if(chanceTime) { score++; }
                 }
                 else
                 {
-                    if(box.Tilt()) { miss++; }
+                    if(box.Tilt())
+                    {
+                        miss++;
+                        chanceTime = false;
+                    }
                 }
             }
             else if (box.position == luigiTiltPosition[1])
@@ -272,10 +292,15 @@ public class GameManager : MonoBehaviour
                     box.MoveToNextPosition();
                     luigiManager.UpdateState();
                     score++;
+                    if (chanceTime) { score++; }
                 }
                 else
                 {
-                    if (box.Tilt()) { miss++; }
+                    if (box.Tilt())
+                    {
+                        miss++;
+                        chanceTime = false;
+                    }
                 }
             }
             else if (box.position == luigiTiltPosition[2])
@@ -285,10 +310,15 @@ public class GameManager : MonoBehaviour
                     box.MoveToNextPosition();
                     luigiManager.UpdateState();
                     score++;
+                    if (chanceTime) { score++; }
                 }
                 else
                 {
-                    if (box.Tilt()) { miss++; }
+                    if (box.Tilt())
+                    {
+                        miss++;
+                        chanceTime = false;
+                    }
                 }
             }
             #endregion
@@ -302,7 +332,7 @@ public class GameManager : MonoBehaviour
                 * Else (if Mario is not next to the tilting box)
                 *      Set box in a "confirmed" tilting state
             */
-            #region Check Mario position
+            #region Mario
             if (box.position == marioTiltPosition[0])
             {
                 if (marioManager.state == MarioState.RECEIVING)
@@ -310,10 +340,15 @@ public class GameManager : MonoBehaviour
                     box.MoveToNextPosition();
                     marioManager.UpdateState();
                     score++;
+                    if (chanceTime) { score++; }
                 }
                 else
                 {
-                    if (box.Tilt()) { miss++; }
+                    if (box.Tilt())
+                    {
+                        miss++;
+                        chanceTime = false;
+                    }
                 }
             }
             else if (box.position == marioTiltPosition[1])
@@ -323,10 +358,15 @@ public class GameManager : MonoBehaviour
                     box.MoveToNextPosition();
                     marioManager.UpdateState();
                     score++;
+                    if (chanceTime) { score++; }
                 }
                 else
                 {
-                    if (box.Tilt()) { miss++; }
+                    if (box.Tilt())
+                    {
+                        miss++;
+                        chanceTime = false;
+                    }
                 }
             }
             else if (box.position == marioTiltPosition[2])
@@ -336,10 +376,15 @@ public class GameManager : MonoBehaviour
                     box.MoveToNextPosition();
                     marioManager.UpdateState();
                     score++;
+                    if (chanceTime) { score++; }
                 }
                 else
                 {
-                    if (box.Tilt()) { miss++; }
+                    if (box.Tilt())
+                    {
+                        miss++;
+                        chanceTime = false;
+                    }
                 }
             }
             #endregion
