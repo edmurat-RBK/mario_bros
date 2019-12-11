@@ -23,9 +23,12 @@ public class BoxSpriteManager : MonoBehaviour
         spriteComponant.enabled = false;
         foreach(Box b in gameManager.conveyorBelt)
         {
-            if(b.position == position)
+            if(b != null)
             {
-                spriteComponant.enabled = true;
+                if (b.position == position)
+                {
+                    spriteComponant.enabled = true;
+                }
             }
         }
     }

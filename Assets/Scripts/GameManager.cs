@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
 
     private SevenDigitDisplay digitDisplay1;
     private SevenDigitDisplay digitDisplay10;
+    private SevenDigitDisplay digitDisplay100;
 
     private void Start()
     {
@@ -38,6 +39,7 @@ public class GameManager : MonoBehaviour
         // Get digit displays
         digitDisplay1 = GameObject.FindGameObjectWithTag("DigitDisplay1").GetComponent<SevenDigitDisplay>();
         digitDisplay10 = GameObject.FindGameObjectWithTag("DigitDisplay10").GetComponent<SevenDigitDisplay>();
+        digitDisplay100 = GameObject.FindGameObjectWithTag("DigitDisplay100").GetComponent<SevenDigitDisplay>();
 
         // Initialise convoyor belt as a list of "Box"
         conveyorBelt = new List<Box>();
@@ -50,13 +52,30 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         // Send correct digit to 7-digit displays
-        if(score <= 99)
+        if(score <= 999)
         {
-            digitDisplay10.digitToPrint = (int)Mathf.Floor(score / 10);
-            digitDisplay1.digitToPrint = score % 10;
+            if(score <= 9)
+            {
+                digitDisplay100.digitToPrint = -1;
+                digitDisplay10.digitToPrint = -1;
+                digitDisplay1.digitToPrint = score % 10;
+            }
+            else if (score <= 99)
+            {
+                digitDisplay100.digitToPrint = -1;
+                digitDisplay10.digitToPrint = (int)Mathf.Floor(score % 100 / 10);
+                digitDisplay1.digitToPrint = score % 10;
+            }
+            else
+            {
+                digitDisplay100.digitToPrint = (int)Mathf.Floor(score / 100);
+                digitDisplay10.digitToPrint = (int)Mathf.Floor(score % 100 / 10);
+                digitDisplay1.digitToPrint = score % 10;
+            }
         }
         else
         {
+            digitDisplay100.digitToPrint = 9;
             digitDisplay10.digitToPrint = 9;
             digitDisplay1.digitToPrint = 9;
         }
@@ -94,9 +113,7 @@ public class GameManager : MonoBehaviour
                     luigiManager.ResetState();
                     marioManager.ResetState();
                     KillBox();
-
                     MoveOddConvoyer();
-                    SpawnBox();
                     break;
 
                 case 1:
@@ -109,7 +126,6 @@ public class GameManager : MonoBehaviour
                     luigiManager.ResetState();
                     marioManager.ResetState();
                     KillBox();
-
                     MoveEvenConvoyer();
                     break;
 
@@ -119,6 +135,7 @@ public class GameManager : MonoBehaviour
                     KillBox();
                     break;
             }
+            if(tickCount%16 == 0) { SpawnBox(); }
             yield return new WaitForSeconds(gameLoopSpeed / 4);
         }
     }
@@ -126,8 +143,6 @@ public class GameManager : MonoBehaviour
     public void Tick()
     {
         tickCount++;
-
-        // Each tick, reset box that has fallen
     }
 
     public void MoveEvenConvoyer()

@@ -156,6 +156,16 @@ public class SevenDigitDisplay : MonoBehaviour
                 segmentG.active = true;
                 break;
 
+            default:
+                segmentA.active = false;
+                segmentB.active = false;
+                segmentC.active = false;
+                segmentD.active = false;
+                segmentE.active = false;
+                segmentF.active = false;
+                segmentG.active = false;
+                break;
+
         }
     }
 }
