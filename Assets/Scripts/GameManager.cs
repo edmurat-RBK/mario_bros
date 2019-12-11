@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
 
         // Start game loop
         tickCount = 0;
-        StartCoroutine(GameLoop());
+        StartCoroutine(InitLoop());
     }
 
     private void Update()
@@ -139,6 +139,55 @@ public class GameManager : MonoBehaviour
             if(tickCount%16 == 0) { SpawnBox(); }
             yield return new WaitForSeconds(gameLoopSpeed / 4);
         }
+    }
+
+    IEnumerator InitLoop()
+    {
+        //INIT LOOP TICK = 12 TICKS
+        /* 
+            * 0 : 
+            *      Mario and Luigi are bowing up at their boss
+            * 1 : 
+            *      nothing
+            * 2 : 
+            *      Mario and Luigi are bowing down at their boss
+            * 3 : 
+            *      nothing
+            * 
+            * After 12 ticks, break loop and switch to game
+        */
+        int initLoopCount = 0;
+        while (initLoopCount <= 12)
+        {
+            initLoopCount++;
+            Tick();
+            switch (tickCount % 4)
+            {
+                case 0:
+                    luigiManager.state = LuigiState.GETTING_YELLED;
+                    marioManager.state = MarioState.GETTING_YELLED;
+                    break;
+
+                case 1:
+                    // Nothing
+                    break;
+
+                case 2:
+                    luigiManager.state = LuigiState.GETTING_YELLED_BOWING;
+                    marioManager.state = MarioState.GETTING_YELLED_BOWING;
+                    break;
+
+                case 3:
+                    // Nothing
+                    break;
+            }
+            yield return new WaitForSeconds(gameLoopSpeed / 4);
+        }
+
+        // Reset states
+        luigiManager.state = LuigiState.AT_FLOOR_1_ARMS_DOWN;
+        marioManager.state = MarioState.RECEIVING;
+        StartCoroutine(GameLoop());
     }
 
     public void Tick()

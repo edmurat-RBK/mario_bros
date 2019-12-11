@@ -22,7 +22,7 @@ public class DigitSegment : MonoBehaviour
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        active = false;
+        active = true;
     }
 
     private void Update()

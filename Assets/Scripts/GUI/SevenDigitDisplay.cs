@@ -19,6 +19,8 @@ public class SevenDigitDisplay : MonoBehaviour
         DigitSegment[] children = GetComponentsInChildren<DigitSegment>();
         foreach(DigitSegment ds in children)
         {
+            ds.active = false;
+
             switch(ds.segment)
             {
                 case DigitSegment.SegmentType.A:
