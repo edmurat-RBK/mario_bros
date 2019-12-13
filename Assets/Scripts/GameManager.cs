@@ -351,7 +351,10 @@ public class GameManager : MonoBehaviour
         {
             if(48 <= b.position && b.position <= 57)
             {
-                b.MoveInTruck();
+                if(b.MoveInTruck())
+                {
+                    boxLoaded++;
+                }
             }
         }
     }
@@ -406,12 +409,12 @@ public class GameManager : MonoBehaviour
     private void ResetTruck()
     {
         boxLoaded = 0;
-        for(int i = 0; i<conveyorBelt.Count; i++)
+        for(int i = 0; i<8; i++)
         {
-            if(conveyorBelt[i].position >= 48)
+            if(conveyorBelt[0].position >= 48)
             {
-                conveyorBelt.RemoveAt(i);
-            }
+                conveyorBelt.RemoveAt(0);
+            } 
         }
     }
 
@@ -470,7 +473,6 @@ public class GameManager : MonoBehaviour
             {
                 if (luigiManager.state == LuigiState.AT_FLOOR_3)
                 {
-                    boxLoaded++;
                     box.Load(dropInFirstColumn,boxLoaded);
                     dropInFirstColumn = !dropInFirstColumn;
                     luigiManager.UpdateState();

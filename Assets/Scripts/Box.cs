@@ -86,8 +86,9 @@ public class Box
         }
     }
 
-    public void MoveInTruck()
+    public bool MoveInTruck()
     {
+        bool hasLanded = false;
         if(fallInTruck)
         {
             position += 2;
@@ -95,8 +96,10 @@ public class Box
             if(position >= stopPosition)
             {
                 fallInTruck = false;
+                hasLanded = true;
             }
         }
+        return hasLanded;
     }
 
     private void SetStopPosition(int boxCountInTruck)
