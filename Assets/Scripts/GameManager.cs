@@ -6,13 +6,14 @@ using EDM_Mario;
 
 public class GameManager : MonoBehaviour
 {
+    // Managers
     private LuigiManager luigiManager;
     private MarioManager marioManager;
 
     [Header("Game loop")]
     public float gameLoopSpeed;
     public int tickCount;
-    public bool loopActive = true;
+    public bool gameLoopActive = true;
 
     [Header("Boxes")]
     public float boxSpawnChance;
@@ -26,6 +27,7 @@ public class GameManager : MonoBehaviour
     public int score = 0;
     public int miss = 0;
     public bool chanceTime = false;
+    public bool event300point = false;
 
     [Header("Truck")]
     public int boxLoaded = 0;
@@ -57,124 +59,108 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         // Send correct digit to 7-digit displays
-        if(score <= 999)
+        UpdateScoreDisplay();
+
+        // Trigger "300-point events"
+        Update300PointEvent();
+    }
+
+    // Send correct digit to each 7-segment digit displays
+    private void UpdateScoreDisplay()
+    {
+        // Maximum score is 999
+        if (score <= 999)
         {
-            if(score <= 9)
+            if (score <= 9)
             {
+                // Only the first digit needs to be active
+                // digitToPrint = -1 disable the display
                 digitDisplay100.digitToPrint = -1;
                 digitDisplay10.digitToPrint = -1;
                 digitDisplay1.digitToPrint = score % 10;
             }
             else if (score <= 99)
             {
+                // Only the two first digit needs to be active
                 digitDisplay100.digitToPrint = -1;
                 digitDisplay10.digitToPrint = (int)Mathf.Floor(score % 100 / 10);
                 digitDisplay1.digitToPrint = score % 10;
             }
             else
             {
+                // All displays are active
                 digitDisplay100.digitToPrint = (int)Mathf.Floor(score / 100);
                 digitDisplay10.digitToPrint = (int)Mathf.Floor(score % 100 / 10);
                 digitDisplay1.digitToPrint = score % 10;
             }
         }
+        // If score is above 999, display 999
         else
         {
             digitDisplay100.digitToPrint = 9;
             digitDisplay10.digitToPrint = 9;
             digitDisplay1.digitToPrint = 9;
         }
+    }
 
-        // Trigger "300-point events"
-        if(score == 300)
+    // Check if 300-point event need to be launch
+    private void Update300PointEvent()
+    {
+        // If player hits 300 points and the event hasn't triggered yet
+        if (score == 300 && !event300point)
         {
-            if(miss == 0)
+            // If there is no miss, when 300 points are hit, active "Chance Time"
+            if (miss <= 0)
             {
                 chanceTime = true;
             }
+            // If there is at least one miss, when 300 points are hit, reset all misses
             else
             {
                 miss = 0;
             }
+
+            // Tell that the 300-point event has been triggered
+            event300point = true;
         }
-
-        // Trigger Truck event
-
     }
 
-    // Game loop function
+
     IEnumerator GameLoop()
     {
-    //GAME LOOP TICK = 4 TICKS
-    /* 
-        * 0 : 
-        *      Even convoyer moves
-        *      Reset states
-        *      Update states
-        * 1 : 
-        *      Reset states
-        *      Update states
-        * 2 : 
-        *      Odd convoyer moves
-        *      Reset states
-        *      Update states
-        * 3 : 
-        *      Reset states
-        *      Update states
-        * 
-        * Every 4 game loop (16 ticks), spawn box
-    */
-        while (loopActive)
+        while (gameLoopActive)
         {
             Tick();
-            switch(tickCount%4) 
+
+            // Reset player sprites on "unstable" states
+            luigiManager.ResetState();
+            marioManager.ResetState();
+            // Destroy boxes on falling state
+            YellAtSomeone(KillBox());
+
+            switch (tickCount%4) 
             {
                 case 0:
-                    luigiManager.ResetState();
-                    marioManager.ResetState();
-                    KillBox();
                     MoveOddConvoyer();
                     break;
 
-                case 1:
-                    luigiManager.ResetState();
-                    marioManager.ResetState();
-                    KillBox();
-                    break;
-
                 case 2:
-                    luigiManager.ResetState();
-                    marioManager.ResetState();
-                    KillBox();
                     MoveEvenConvoyer();
                     break;
 
-                case 3:
-                    luigiManager.ResetState();
-                    marioManager.ResetState();
-                    KillBox();
+                default:
+                    // Nothing
                     break;
             }
-            if(tickCount%16 == 0) { SpawnBox(); }
+
+            if (tickCount%16 == 0) { SpawnBox(); }
             yield return new WaitForSeconds(gameLoopSpeed / 4);
         }
     }
 
+
     IEnumerator InitLoop()
     {
-        //INIT LOOP TICK = 12 TICKS
-        /* 
-            * 0 : 
-            *      Mario and Luigi are bowing up at their boss
-            * 1 : 
-            *      nothing
-            * 2 : 
-            *      Mario and Luigi are bowing down at their boss
-            * 3 : 
-            *      nothing
-            * 
-            * After 12 ticks, break loop and switch to game
-        */
         int initLoopCount = 0;
         while (initLoopCount <= 12)
         {
@@ -205,11 +191,76 @@ public class GameManager : MonoBehaviour
         StartCoroutine(GameLoop());
     }
 
+
+    IEnumerator LuigiYelledLoop()
+    {
+        int initLoopCount = 0;
+        while (initLoopCount <= 12)
+        {
+            initLoopCount++;
+            Tick();
+            switch (tickCount % 4)
+            {
+                case 0:
+                    luigiManager.state = LuigiState.GETTING_YELLED;
+                    break;
+
+                case 2:
+                    luigiManager.state = LuigiState.GETTING_YELLED_BOWING;
+                    break;
+
+                default:
+                    // Nothing
+                    break;
+            }
+            yield return new WaitForSeconds(gameLoopSpeed / 4);
+        }
+
+        // Reset states
+        luigiManager.state = LuigiState.AT_FLOOR_1_ARMS_DOWN;
+        gameLoopActive = true;
+        StartCoroutine(GameLoop());
+    }
+
+
+    IEnumerator MarioYelledLoop()
+    {
+        int initLoopCount = 0;
+        while (initLoopCount <= 12)
+        {
+            initLoopCount++;
+            Tick();
+            switch (tickCount % 4)
+            {
+                case 0:
+                    marioManager.state = MarioState.GETTING_YELLED;
+                    break;
+
+                case 2:
+                    marioManager.state = MarioState.GETTING_YELLED_BOWING;
+                    break;
+
+                default:
+                    // Nothing
+                    break;
+            }
+            yield return new WaitForSeconds(gameLoopSpeed / 4);
+        }
+
+        // Reset states
+        marioManager.state = MarioState.RECEIVING;
+        gameLoopActive = true;
+        StartCoroutine(GameLoop());
+    }
+
+    // Actions repeated each tick
     public void Tick()
     {
+        // Increment tick count by 1
         tickCount++;
     }
 
+    // Move boxes that are on second or fourth conveyor
     public void MoveEvenConvoyer()
     {
         foreach (Box b in conveyorBelt)
@@ -221,6 +272,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Move boxes that are on first, third or fifth conveyor
     public void MoveOddConvoyer()
     {
         foreach (Box b in conveyorBelt)
@@ -232,6 +284,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Spawn box on incoming conveyor
     void SpawnBox()
     {
         if(Random.Range(0f,1f) < boxSpawnChance)
@@ -243,17 +296,41 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void KillBox()
+    // Delete boxes in falling state from conveyor belt list
+    // Return position of destoryed box
+    private int KillBox()
     {
+        int position = 0;
         for(int i=0; i<conveyorBelt.Count; i++)
         {
             if(conveyorBelt[i].fall)
             {
+                position = conveyorBelt[i].position;
                 conveyorBelt.Remove(conveyorBelt[i]);
+                // Break game loop
+                gameLoopActive = false;
+            }
+        }
+        return position;
+    }
+
+    // Yell the correct player if a box fall
+    private void YellAtSomeone(int positionBroken)
+    {
+        if(positionBroken != 0)
+        {
+            if(positionBroken == -3)
+            {
+                StartCoroutine(LuigiYelledLoop());
+            }
+            else if(positionBroken == -1 || positionBroken == -2)
+            {
+                StartCoroutine(MarioYelledLoop());
             }
         }
     }
 
+    // We are in trouble...
     void MoveBox(Box box)
     {
         // IF BOX IN TILT POSITION (Luigi-side)
