@@ -11,6 +11,7 @@ public enum LuigiState
     AT_FLOOR_3,
     DROPPING,
     TAKING_BREAK,
+    TAKING_BREAK_BREEZE,
     GETTING_YELLED,
     GETTING_YELLED_BOWING
 }

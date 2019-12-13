@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     // Managers
     private LuigiManager luigiManager;
     private MarioManager marioManager;
+    private TruckManager truckManager;
 
     [Header("Game loop")]
     public float gameLoopSpeed;
@@ -44,6 +45,7 @@ public class GameManager : MonoBehaviour
         // Get Manager
         luigiManager = GameObject.FindGameObjectWithTag("LuigiManager").GetComponent<LuigiManager>();
         marioManager = GameObject.FindGameObjectWithTag("MarioManager").GetComponent<MarioManager>();
+        truckManager = GameObject.FindGameObjectWithTag("TruckManager").GetComponent<TruckManager>();
 
         // Get digit displays
         digitDisplay1 = GameObject.FindGameObjectWithTag("DigitDisplay1").GetComponent<SevenDigitDisplay>();
@@ -65,6 +67,8 @@ public class GameManager : MonoBehaviour
 
         // Trigger "300-point events"
         Update300PointEvent();
+
+        UpdateTruckLoaded();
     }
 
     // Send correct digit to each 7-segment digit displays
@@ -128,6 +132,16 @@ public class GameManager : MonoBehaviour
     }
 
 
+    private void UpdateTruckLoaded()
+    {
+        if(boxLoaded == 8 && gameLoopActive)
+        {
+            gameLoopActive = false;
+            StartCoroutine(TakeBreakLoop());
+        }
+    }
+
+
     IEnumerator GameLoop()
     {
         while (gameLoopActive)
@@ -143,13 +157,13 @@ public class GameManager : MonoBehaviour
             switch (tickCount%4) 
             {
                 case 0:
-                    MoveOddConvoyer();
                     MoveBoxInTruck();
+                    MoveOddConvoyer();
                     break;
 
                 case 2:
-                    MoveEvenConvoyer();
                     MoveBoxInTruck();
+                    MoveEvenConvoyer();
                     break;
 
                 default:
@@ -257,6 +271,51 @@ public class GameManager : MonoBehaviour
         StartCoroutine(GameLoop());
     }
 
+
+    IEnumerator TakeBreakLoop()
+    {
+        // Wait a bit before excuting Take Break
+        new WaitForSeconds(gameLoopSpeed / 2);
+
+        int loopCount = 0;
+        while (loopCount <= 12)
+        {
+            loopCount++;
+            Tick();
+            switch (tickCount % 4)
+            {
+                case 0:
+                    marioManager.state = MarioState.TAKING_BREAK;
+                    luigiManager.state = LuigiState.TAKING_BREAK;
+                    break;
+
+                case 2:
+                    marioManager.state = MarioState.TAKING_BREAK_BREEZE;
+                    luigiManager.state = LuigiState.TAKING_BREAK_BREEZE;
+                    break;
+
+                default:
+                    // Nothing
+                    break;
+            }
+
+            // Add score bonus (+10 points)
+            if(2 <= loopCount && loopCount <= 12)
+            {
+                score++;
+            }
+
+            yield return new WaitForSeconds(gameLoopSpeed / 4);
+        }
+
+        // Reset states
+        ResetTruck();
+        luigiManager.state = LuigiState.AT_FLOOR_1_ARMS_DOWN;
+        marioManager.state = MarioState.RECEIVING;
+        gameLoopActive = true;
+        StartCoroutine(GameLoop());
+    }
+
     // Actions repeated each tick
     public void Tick()
     {
@@ -342,6 +401,19 @@ public class GameManager : MonoBehaviour
             else if(positionBroken == -1 || positionBroken == -2)
             {
                 StartCoroutine(MarioYelledLoop());
+            }
+        }
+    }
+
+
+    private void ResetTruck()
+    {
+        boxLoaded = 0;
+        for(int i = 0; i<conveyorBelt.Count; i++)
+        {
+            if(conveyorBelt[i].position >= 48)
+            {
+                conveyorBelt.RemoveAt(i);
             }
         }
     }

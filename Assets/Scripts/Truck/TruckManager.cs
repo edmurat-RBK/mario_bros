@@ -26,7 +26,6 @@ public class TruckManager : MonoBehaviour
         else if((gameManager.boxLoaded == 8) && truckState == TruckState.ALMOST_LOAD)
         {
             truckState = TruckState.READY_TO_GO;
-
         }
     }
 }
