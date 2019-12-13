@@ -8558,7 +8558,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_TargetDisplay: 0
 --- !u!1001 &1260276079
 PrefabInstance:
@@ -10390,7 +10390,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7ccd3c32ea017b4587409bac053c8ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  button: {fileID: 0}
 --- !u!114 &1570207752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11154,7 +11153,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f5d49cb02721146af055dbbb14f292, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  button: {fileID: 0}
 --- !u!114 &1744161890
 MonoBehaviour:
   m_ObjectHideFlags: 0

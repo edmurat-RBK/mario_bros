@@ -6,15 +6,15 @@ using UnityEngine.SceneManagement;
 
 public class ButtonGameA : MonoBehaviour
 {
-    public Button button;
+    private Button button;
 
     void Start()
     {
-        Button button = GetComponent<Button>();
-        button.onClick.AddListener(OnClick);
+        button = GetComponent<Button>();
+        button.onClick.AddListener(LoadOnClick);
     }
 
-    void OnClick()
+    void LoadOnClick()
     {
         SceneManager.LoadScene("GameA");
     }
