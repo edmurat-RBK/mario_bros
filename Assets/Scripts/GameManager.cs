@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
     private MarioManager marioManager;
     private TruckManager truckManager;
 
+    // Audio
+    private AudioSource audioSource;
+
     [Header("Game loop")]
     public float gameLoopSpeed;
     public int tickCount;
@@ -35,6 +38,11 @@ public class GameManager : MonoBehaviour
     public int boxLoaded = 0;
     public bool dropInFirstColumn = true; // First column is the left one, second is the right one
 
+    [Header("Audio")]
+    public AudioClip conveyorTick;
+    public AudioClip addScore;
+    public AudioClip bossYelling;
+
     // 7-segment digit displays
     private SevenDigitDisplay digitDisplay1;
     private SevenDigitDisplay digitDisplay10;
@@ -46,6 +54,9 @@ public class GameManager : MonoBehaviour
         luigiManager = GameObject.FindGameObjectWithTag("LuigiManager").GetComponent<LuigiManager>();
         marioManager = GameObject.FindGameObjectWithTag("MarioManager").GetComponent<MarioManager>();
         truckManager = GameObject.FindGameObjectWithTag("TruckManager").GetComponent<TruckManager>();
+
+        // Get Audio Source
+        audioSource = GetComponent<AudioSource>();
 
         // Get digit displays
         digitDisplay1 = GameObject.FindGameObjectWithTag("DigitDisplay1").GetComponent<SevenDigitDisplay>();
@@ -179,6 +190,8 @@ public class GameManager : MonoBehaviour
 
     IEnumerator InitLoop()
     {
+        audioSource.PlayOneShot(bossYelling);
+
         int initLoopCount = 0;
         while (initLoopCount <= 12)
         {
@@ -212,8 +225,10 @@ public class GameManager : MonoBehaviour
 
     IEnumerator LuigiYelledLoop()
     {
+        audioSource.PlayOneShot(bossYelling);
+
         int initLoopCount = 0;
-        while (initLoopCount <= 12)
+        while (initLoopCount <= 12 || miss >= 3)
         {
             initLoopCount++;
             Tick();
@@ -243,8 +258,10 @@ public class GameManager : MonoBehaviour
 
     IEnumerator MarioYelledLoop()
     {
+        audioSource.PlayOneShot(bossYelling);
+
         int initLoopCount = 0;
-        while (initLoopCount <= 12)
+        while (initLoopCount <= 12 || miss >= 3)
         {
             initLoopCount++;
             Tick();
@@ -275,7 +292,7 @@ public class GameManager : MonoBehaviour
     IEnumerator TakeBreakLoop()
     {
         int loopCount = 0;
-        while (loopCount <= 12)
+        while (loopCount <= 24)
         {
             loopCount++;
             Tick();
@@ -297,9 +314,10 @@ public class GameManager : MonoBehaviour
             }
 
             // Add score bonus (+10 points)
-            if(2 <= loopCount && loopCount <= 12)
+            if(10 <= loopCount && loopCount <= 20)
             {
                 score++;
+                audioSource.PlayOneShot(addScore);
             }
 
             yield return new WaitForSeconds(gameLoopSpeed / 4);
@@ -323,24 +341,38 @@ public class GameManager : MonoBehaviour
     // Move boxes that are on second or fourth conveyor
     public void MoveEvenConvoyer()
     {
+        bool boxHasMoved = false;
         foreach (Box b in conveyorBelt)
         {
-            if ((12 <= b.position && b.position <= 20) || (30 <= b.position && b.position <= 38))
+            if ((0 <= b.position && b.position <= 2) || (12 <= b.position && b.position <= 20) || (30 <= b.position && b.position <= 38))
             {
                 MoveBox(b);
+                boxHasMoved = true;
             }
+        }
+
+        if (boxHasMoved)
+        {
+            audioSource.PlayOneShot(conveyorTick);
         }
     }
 
     // Move boxes that are on first, third or fifth conveyor
     public void MoveOddConvoyer()
     {
+        bool boxHasMoved = false;
         foreach (Box b in conveyorBelt)
         {
-            if ((0 <= b.position && b.position <= 11) || (21 <= b.position && b.position <= 29) || (39 <= b.position && b.position <= 47))
+            if ((3 <= b.position && b.position <= 11) || (21 <= b.position && b.position <= 29) || (39 <= b.position && b.position <= 47))
             {
                 MoveBox(b);
+                boxHasMoved = true;
             }
+        }
+
+        if (boxHasMoved)
+        {
+            audioSource.PlayOneShot(conveyorTick);
         }
     }
 
@@ -406,7 +438,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    private void ResetTruck()
+    public void ResetTruck()
     {
         boxLoaded = 0;
         for(int i = 0; i<8; i++)

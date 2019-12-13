@@ -8,11 +8,16 @@ namespace EDM_Luigi
     {
 
         public LuigiState state;
+        private AudioSource audioSource;
 
+        [Header("Audio")]
+        public AudioClip movementAudio;
+        public AudioClip passBoxAudio;
 
         void Start()
         {
             state = LuigiState.AT_FLOOR_1_ARMS_DOWN;
+            audioSource = GetComponent<AudioSource>();
         }
 
         void Update()
@@ -23,6 +28,7 @@ namespace EDM_Luigi
                     if(Input.GetKeyDown(KeyCode.Z))
                     {
                         state = LuigiState.AT_FLOOR_2_ARMS_DOWN;
+                        audioSource.PlayOneShot(movementAudio);
                     }
                     break;
 
@@ -30,10 +36,12 @@ namespace EDM_Luigi
                     if (Input.GetKeyDown(KeyCode.Z))
                     {
                         state = LuigiState.AT_FLOOR_3;
+                        audioSource.PlayOneShot(movementAudio);
                     }
                     else if (Input.GetKeyDown(KeyCode.S))
                     {
                         state = LuigiState.AT_FLOOR_1_ARMS_DOWN;
+                        audioSource.PlayOneShot(movementAudio);
                     }
                     break;
 
@@ -41,6 +49,7 @@ namespace EDM_Luigi
                     if (Input.GetKeyDown(KeyCode.S))
                     {
                         state = LuigiState.AT_FLOOR_2_ARMS_DOWN;
+                        audioSource.PlayOneShot(movementAudio);
                     }
                     break;
             }
@@ -51,14 +60,17 @@ namespace EDM_Luigi
             if(state == LuigiState.AT_FLOOR_1_ARMS_DOWN)
             {
                 state = LuigiState.AT_FLOOR_1_ARMS_UP;
+                audioSource.PlayOneShot(passBoxAudio);
             }
             else if (state == LuigiState.AT_FLOOR_2_ARMS_DOWN)
             {
                 state = LuigiState.AT_FLOOR_2_ARMS_UP;
+                audioSource.PlayOneShot(passBoxAudio);
             }
             else if (state == LuigiState.AT_FLOOR_3)
             {
                 state = LuigiState.DROPPING;
+                audioSource.PlayOneShot(passBoxAudio);
             }
         }
 
