@@ -4,18 +4,16 @@ using UnityEngine;
 
 public class Box
 {
-    public static int instanceCount = 0;
-    public int id;
     public int position;
 
     public bool tilt = false;
     public bool fall = false;
-
-
+    public bool load = false;
+    public bool fallInTruck = false;
+    public int stopPosition = 0;
 
     public Box()
     {
-        id = ++instanceCount;
         position = 0;
     }
 
@@ -67,6 +65,68 @@ public class Box
             fall = true;
             tilt = false;
             position = -2;
+        }
+    }
+
+    public void Load(bool inFirstColumn, int boxCountInTruck)
+    {
+        load = true;
+        fallInTruck = true;
+        tilt = false;
+
+        SetStopPosition(boxCountInTruck);
+
+        if(inFirstColumn)
+        {
+            position = 49;
+        }
+        else
+        {
+            position = 48;
+        }
+    }
+
+    public void MoveInTruck()
+    {
+        if(fallInTruck)
+        {
+            position += 2;
+
+            if(position >= stopPosition)
+            {
+                fallInTruck = false;
+            }
+        }
+    }
+
+    private void SetStopPosition(int boxCountInTruck)
+    {
+        switch(boxCountInTruck)
+        {
+            case 0:
+                stopPosition = 57;
+                break;
+            case 1:
+                stopPosition = 56;
+                break;
+            case 2:
+                stopPosition = 55;
+                break;
+            case 3:
+                stopPosition = 54;
+                break;
+            case 4:
+                stopPosition = 53;
+                break;
+            case 5:
+                stopPosition = 52;
+                break;
+            case 6:
+                stopPosition = 51;
+                break;
+            case 7:
+                stopPosition = 50;
+                break;
         }
     }
 }

@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Boxes")]
     public float boxSpawnChance;
+    public int spawnTickRate;
     [HideInInspector] public List<Box> conveyorBelt;
 
     [Header("Tilt position")]
@@ -31,6 +32,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Truck")]
     public int boxLoaded = 0;
+    public bool dropInFirstColumn = true; // First column is the left one, second is the right one
 
     // 7-segment digit displays
     private SevenDigitDisplay digitDisplay1;
@@ -142,10 +144,12 @@ public class GameManager : MonoBehaviour
             {
                 case 0:
                     MoveOddConvoyer();
+                    MoveBoxInTruck();
                     break;
 
                 case 2:
                     MoveEvenConvoyer();
+                    MoveBoxInTruck();
                     break;
 
                 default:
@@ -153,7 +157,7 @@ public class GameManager : MonoBehaviour
                     break;
             }
 
-            if (tickCount%16 == 0) { SpawnBox(); }
+            if (tickCount%spawnTickRate == 0) { SpawnBox(); }
             yield return new WaitForSeconds(gameLoopSpeed / 4);
         }
     }
@@ -284,6 +288,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Move boxes that are loaded in truck
+    public void MoveBoxInTruck()
+    {
+        foreach(Box b in conveyorBelt)
+        {
+            if(48 <= b.position && b.position <= 57)
+            {
+                b.MoveInTruck();
+            }
+        }
+    }
+
     // Spawn box on incoming conveyor
     void SpawnBox()
     {
@@ -331,6 +347,7 @@ public class GameManager : MonoBehaviour
     }
 
     // We are in trouble...
+    // Need to refactor
     void MoveBox(Box box)
     {
         // IF BOX IN TILT POSITION (Luigi-side)
@@ -384,7 +401,9 @@ public class GameManager : MonoBehaviour
             {
                 if (luigiManager.state == LuigiState.AT_FLOOR_3)
                 {
-                    box.MoveToNextPosition();
+                    boxLoaded++;
+                    box.Load(dropInFirstColumn,boxLoaded);
+                    dropInFirstColumn = !dropInFirstColumn;
                     luigiManager.UpdateState();
                     score++;
                     if (chanceTime) { score++; }
