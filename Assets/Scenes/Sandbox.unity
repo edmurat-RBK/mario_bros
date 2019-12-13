@@ -167,7 +167,7 @@ MonoBehaviour:
   tickCount: 0
   gameLoopActive: 1
   boxSpawnChance: 1
-  spawnTickRate: 24
+  spawnTickRate: 32
   luigiTiltPosition: 0b0000001d0000002f000000
   marioTiltPosition: 020000001400000026000000
   score: 0
@@ -4599,7 +4599,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &717979094
 Transform:
   m_ObjectHideFlags: 0
