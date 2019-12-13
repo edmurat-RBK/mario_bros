@@ -5,12 +5,14 @@ using UnityEngine;
 public class TruckManager : MonoBehaviour
 {
     private GameManager gameManager;
+    private SmokeManager smokeManager;
 
     public TruckState truckState;
 
     private void Start()
     {
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        smokeManager = GameObject.FindGameObjectWithTag("SmokeManager").GetComponent<SmokeManager>();
     }
 
     private void Update()
@@ -22,6 +24,7 @@ public class TruckManager : MonoBehaviour
         else if((6 <= gameManager.boxLoaded && gameManager.boxLoaded < 8) && truckState == TruckState.WAITING)
         {
             truckState = TruckState.ALMOST_LOAD;
+            smokeManager.StartCoroutine("SmokeLoop");
         }
         else if((gameManager.boxLoaded == 8) && truckState == TruckState.ALMOST_LOAD)
         {

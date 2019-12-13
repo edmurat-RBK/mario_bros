@@ -2,22 +2,22 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class TruckSpriteManager : MonoBehaviour
+public class SmokeSpriteManager : MonoBehaviour
 {
-    private TruckManager truckManager;
+    private SmokeManager smokeManager;
     private SpriteRenderer spriteComponant;
 
-    public List<TruckState> activeAtState;
+    public List<SmokeState> activeAtState;
 
     private void Start()
     {
-        truckManager = GameObject.FindGameObjectWithTag("TruckManager").GetComponent<TruckManager>();
+        smokeManager = GameObject.FindGameObjectWithTag("SmokeManager").GetComponent<SmokeManager>();
         spriteComponant = GetComponent<SpriteRenderer>();
     }
 
     private void Update()
     {
-        if (activeAtState.Contains(truckManager.truckState))
+        if (activeAtState.Contains(smokeManager.smokeState))
         {
             spriteComponant.enabled = true;
         }

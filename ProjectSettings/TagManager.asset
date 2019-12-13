@@ -11,6 +11,7 @@ TagManager:
   - DigitDisplay10
   - DigitDisplay100
   - TruckManager
+  - SmokeManager
   layers:
   - Default
   - TransparentFX
