@@ -274,9 +274,6 @@ public class GameManager : MonoBehaviour
 
     IEnumerator TakeBreakLoop()
     {
-        // Wait a bit before excuting Take Break
-        new WaitForSeconds(gameLoopSpeed / 2);
-
         int loopCount = 0;
         while (loopCount <= 12)
         {
