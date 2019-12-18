@@ -17,6 +17,7 @@ public class Box
         position = 0;
     }
 
+    // Move box to next position
     public void MoveToNextPosition()
     {
         // Move to next position
@@ -26,12 +27,11 @@ public class Box
         tilt = false;
     }
 
+    // Call this function with "tilt" at false, set it to true
+    // Call this function with "tilt" at true, makes the box falling
+    // Return true if box has fallen, false if box has tilted
     public bool Tilt()
     {
-        // Call this function with "tilt" at false, set it to true
-        // Call this function with "tilt" at true, makes the box falling
-        // Return true if box has fallen, false if box has tilted
-
         bool hasFall;
         if(tilt)
         {
@@ -46,6 +46,7 @@ public class Box
         return hasFall;
     }
 
+    // Set position of box to it falling position
     public void Fall()
     {
         if(position == 2)
@@ -68,6 +69,7 @@ public class Box
         }
     }
 
+    // Set box to a "on-truck state"
     public void Load(bool inFirstColumn, int boxCountInTruck)
     {
         load = true;
@@ -86,6 +88,7 @@ public class Box
         }
     }
 
+    // Used to shox gravity on box in truck
     public bool MoveInTruck()
     {
         bool hasLanded = false;
@@ -102,6 +105,7 @@ public class Box
         return hasLanded;
     }
 
+    // Get what should be the last position of the box in truck
     private void SetStopPosition(int boxCountInTruck)
     {
         switch(boxCountInTruck)

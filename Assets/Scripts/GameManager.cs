@@ -4,6 +4,7 @@ using UnityEngine;
 using EDM_Luigi;
 using EDM_Mario;
 
+[RequireComponent(typeof(AudioSource))]
 public class GameManager : MonoBehaviour
 {
     // Managers
@@ -142,7 +143,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
+    // Check if 8 boxes are loaded on the truck
     private void UpdateTruckLoaded()
     {
         if(boxLoaded == 8 && gameLoopActive)
@@ -152,7 +153,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
+    // Loop of the game, when Mario and Luigi are in hands of the player
     IEnumerator GameLoop()
     {
         while (gameLoopActive)
@@ -187,7 +188,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
+    // Loop of the animation at game initialisation
     IEnumerator InitLoop()
     {
         audioSource.PlayOneShot(bossYelling);
@@ -222,7 +223,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(GameLoop());
     }
 
-
+    // Loop of the animation when a box fall in Luigi side
     IEnumerator LuigiYelledLoop()
     {
         audioSource.PlayOneShot(bossYelling);
@@ -255,7 +256,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(GameLoop());
     }
 
-
+    // Loop of the animation when a box fall in Mario side
     IEnumerator MarioYelledLoop()
     {
         audioSource.PlayOneShot(bossYelling);
@@ -288,7 +289,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(GameLoop());
     }
 
-
+    // Loop of tha animation when a truck in fully loaded
     IEnumerator TakeBreakLoop()
     {
         int loopCount = 0;
@@ -434,10 +435,10 @@ public class GameManager : MonoBehaviour
             {
                 StartCoroutine(MarioYelledLoop());
             }
-        }
+        } 
     }
 
-
+    // Remove all boxes loaded on truck
     public void ResetTruck()
     {
         boxLoaded = 0;
@@ -450,8 +451,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // We are in trouble...
-    // Need to refactor
+    // Move box to the next position
+    // Check if Mario or Luigi are at correct state to move box to a next position, if needed
     void MoveBox(Box box)
     {
         // IF BOX IN TILT POSITION (Luigi-side)
